@@ -10,6 +10,10 @@ def contact_view(request):
         email = request.POST.get('email')
         phone_number = request.POST.get('phone_number')
         message = request.POST.get('message')
+
+        if not request.user.is_authenticated:
+            messages.error(request, "You didn't sign up yet, so sign up first.")
+            return redirect('signup')
         
         Contact.objects.create(
             full_name=full_name,
