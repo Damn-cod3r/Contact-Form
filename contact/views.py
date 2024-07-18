@@ -2,18 +2,24 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Contact
 from django.contrib.auth.models import User
-
+from django.contrib.auth import authenticate, login
+import re
 def contact_view(request):
     success_message = None
     if request.method == "POST":
+        if not request.user.is_authenticated:
+            messages.error(request, "As you have not signed up yet, do so now.")
+            return redirect('signup')
+
         full_name = request.POST.get('full_name')
         email = request.POST.get('email')
         phone_number = request.POST.get('phone_number')
         message = request.POST.get('message')
-
-        if not request.user.is_authenticated:
-            messages.error(request, "You didn't sign up yet, so sign up first.")
-            return redirect('signup')
+        
+        phone_regex = re.compile(r'^\+?1?\d{9,15}$')
+        if not phone_regex.match(phone_number):
+            messages.error(request, "Please enter a valid phone number.")
+            return redirect('contact_view')
         
         Contact.objects.create(
             full_name=full_name,
@@ -43,8 +49,11 @@ def signup(request):
                     email=email,
                     password=password  # The password will be hashed automatically
                 )
-                messages.success(request, 'Your account has been created successfully!')
-                return redirect('contact_view')  # Redirect to the contact page
+                user = authenticate(request, username=email, password=password)  # Authenticate the user
+                if user is not None:
+                    login(request, user)  # Log the user in
+                    messages.success(request, 'Your account has been created successfully!')
+                    return redirect('contact_view')  # Redirect to the contact page
         else:
             messages.error(request, 'Passwords do not match!')
 

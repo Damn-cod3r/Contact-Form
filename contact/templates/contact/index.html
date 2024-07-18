@@ -12,9 +12,9 @@
             <h3 class="card-title text-center mb-4">Contact</h3>
             
             {% if success_message %}
-            <div class="alert alert-success" role="alert">
-                {{ success_message }}
-            </div>
+                <div class="alert alert-success" role="alert">
+                    {{ success_message }}
+                </div>
             {% endif %}
             {% if messages %}
                 {% for message in messages %}
@@ -44,6 +44,15 @@
             
         </div>
     </div>
+    <script>
+        function validateForm() {
+            const phoneInput = document.getElementById('phone_number');
+            if (phoneInput.value.trim() === '') {
+                alert('Phone number is required.');
+                return false;
+            }
+            return true;
+        }
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
