@@ -3,7 +3,7 @@ from django.contrib import messages
 from .models import Contact
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
-import re
+#import re
 def contact_view(request):
     success_message = None
     if request.method == "POST":
@@ -16,10 +16,10 @@ def contact_view(request):
         phone_number = request.POST.get('phone_number')
         message = request.POST.get('message')
         
-        phone_regex = re.compile(r'^\+?1?\d{9,15}$')
-        if not phone_regex.match(phone_number):
-            messages.error(request, "Please enter a valid phone number.")
-            return redirect('contact_view')
+        # phone_regex = re.compile(r'^\+?1?\d{9,15}$')
+        # if not phone_regex.match(phone_number):
+        #     messages.error(request, "Please enter a valid phone number.")
+        #     return redirect('contact_view')
         
         Contact.objects.create(
             full_name=full_name,
